@@ -219,20 +219,25 @@ class myHashMap<K,V> {
      *                 removed, else null if not found
      */
 
-    public boolean remove(K key, V val) {
+    public V remove(K key) {
+        int index = getBucketIndex(key);
+        HashNode<K, V> head = bucket.get(index);
+        HashNode<K, V> prev = null;
 
-        V originalValue = get(key);
-
-        if (originalValue == null || 
-           (! originalValue.equals(val)) ) {
-            return false;
+        while (head != null) {
+            if (head.key.equals(key)) {
+                if (prev != null) {
+                    prev.next = head.next;
+                } else {
+                    bucket.set(index, head.next);
+                }
+                size--;
+                return head.value;
+            }
+            prev = head;
+            head = head.next;
         }
-
-        // Key was found and its value equals the passed
-        // parameter 'val'
-        remove(key);
-
-        return true;
+        return null;
     }
 
 
